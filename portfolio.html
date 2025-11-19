@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santhos Raj | The Singularity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --void: #010101;
+            --star: #ffffff;
+            --gold: #ffcc00;
+            --orange: #ff6600;
+            --hud: #00f3ff;
+            --hud-dim: rgba(0, 243, 255, 0.15);
+            --glass: rgba(10, 15, 20, 0.7);
+            --font-header: 'Cinzel', serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --font-term: 'Share Tech Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--void);
+            color: var(--star);
+            font-family: var(--font-body);
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        /* --- INIT SCREEN --- */
+        #init-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s;
+        }
+
+        .init-btn {
+            padding: 20px 60px;
+            border: 1px solid var(--hud);
+            background: transparent;
+            color: var(--hud);
+            font-family: var(--font-term);
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--hud-dim);
+        }
+
+        .init-btn:hover {
+            background: var(--hud);
+            color: #000;
+            box-shadow: 0 0 50px var(--hud);
+        }
+
+        /* --- BACKGROUND SCENES --- */
+        .scene-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+
+        .scene-layer.active {
+            opacity: 1;
+        }
+
+        /* HOME: GARGANTUA */
+        #scene-home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gargantua-wrapper {
+            position: relative;
+            transform: rotateX(10deg);
+            transition: transform 0.1s ease-out;
+        }
+
+        .event-horizon {
+            width: 250px;
+            height: 250px;
+            background: #000;
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 100, 0, 0.8) inset;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .accretion-disk {
+            width: 900px;
+            height: 900px;
+            border-radius: 50%;
+            background: radial-gradient(transparent 40%, var(--gold) 45%, var(--orange) 55%, transparent 70%);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            box-shadow: 0 0 100px var(--orange);
+            opacity: 0.9;
+            animation: spin 40s linear infinite;
+            z-index: 5;
+        }
+
+        .lensing {
+            width: 800px;
+            height: 400px;
+            border-radius: 400px 400px 0 0;
+            background: linear-gradient(to bottom, rgba(255, 184, 77, 0.5), transparent);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -60%);
+            filter: blur(20px);
+            z-index: 1;
+        }
+
+        @keyframes spin {
+            to {
+                transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg);
+            }
+        }
+
+        /* EXP: WORMHOLE */
+        #scene-exp {
+            perspective: 800px;
+            overflow: hidden;
+        }
+
+        .wormhole-sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent);
+            box-shadow: 0 0 50px rgba(100, 200, 255, 0.2) inset;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: pulseWorm 5s infinite alternate;
+        }
+
+        @keyframes pulseWorm {
+            from {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            to {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* PROJECTS: PLANET */
+        #scene-projects {
+            transform-style: preserve-3d;
+        }
+
+        .planet-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotateX(60deg);
+            animation: spin 20s linear infinite;
+        }
+
+        .planet {
+            width: 50px;
+            height: 50px;
+            background: var(--hud);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px var(--hud);
+        }
+
+        /* ACHIEVE: SUPERNOVA */
+        #scene-achieve {
+            background: radial-gradient(circle, var(--gold) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: twinkle 3s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 50px 50px;
+            }
+        }
+
+        /* CONTACT: TESSERACT GRID */
+        #scene-contact {
+            background: repeating-linear-gradient(90deg, transparent 0 49px, rgba(255, 255, 255, 0.05) 50px),
+                repeating-linear-gradient(0deg, transparent 0 49px, rgba(255, 255, 255, 0.05) 50px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 50px 50px;
+            }
+        }
+
+        /* --- NAV --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-item {
+            font-family: var(--font-term);
+            color: var(--hud);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--hud-dim);
+            padding: 8px 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--hud);
+            color: #000;
+            box-shadow: 0 0 20px var(--hud);
+        }
+
+        /* --- CONTENT --- */
+        .sector {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1);
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .sector.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
+
+        h1 {
+            font-family: var(--font-header);
+            font-size: 5rem;
+            line-height: 0.9;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            font-family: var(--font-header);
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+        }
+
+        .glass-panel {
+            background: var(--glass);
+            border-left: 4px solid var(--gold);
+            padding: 30px;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        .holo-card {
+            background: rgba(5, 10, 15, 0.8);
+            border: 1px solid var(--hud-dim);
+            padding: 25px;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .holo-card:hover {
+            border-color: var(--hud);
+            transform: translateY(-5px);
+            background: rgba(5, 10, 15, 0.95);
+        }
+
+        /* --- TARS UI --- */
+        #tars-unit {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 400px;
+            background: #0e1012;
+            border: 2px solid #333;
+            z-index: 500;
+            font-family: var(--font-term);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+        }
+
+        .tars-header {
+            background: #1a1d24;
+            padding: 10px 15px;
+            color: var(--hud);
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .tars-log {
+            height: 250px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #050505;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg-bot {
+            color: var(--hud);
+            text-align: left;
+            border-left: 2px solid var(--hud);
+            padding-left: 10px;
+        }
+
+        .msg-user {
+            color: var(--gold);
+            text-align: right;
+            border-right: 2px solid var(--gold);
+            padding-right: 10px;
+        }
+
+        .tars-input-area {
+            display: flex;
+            border-top: 1px solid #333;
+            background: #111;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 15px;
+            font-family: var(--font-term);
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .mic-btn {
+            width: 50px;
+            background: #222;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+
+        .mic-btn.listening {
+            background: var(--orange);
+            color: #fff;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 106, 0, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 106, 0, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- INIT SCREEN -->
+    <div id="init-screen">
+        <div style="font-family: var(--font-term); color: var(--gold); margin-bottom: 20px;">TARS KNOWLEDGE BASE v11.0
+            // UPDATED 2025</div>
+        <button class="init-btn" onclick="initialize()">INITIALIZE TARS</button>
+    </div>
+
+    <!-- BACKGROUND SCENES -->
+    <canvas id="starfield" style="position:fixed; top:0; left:0; z-index:-10;"></canvas>
+
+    <div id="scene-home" class="scene-layer active">
+        <div class="gargantua-wrapper" id="gargantua">
+            <div class="lensing"></div>
+            <div class="event-horizon"></div>
+            <div class="accretion-disk"></div>
+        </div>
+    </div>
+    <div id="scene-skills" class="scene-layer"></div>
+    <div id="scene-exp" class="scene-layer">
+        <div class="wormhole-sphere"></div>
+    </div>
+    <div id="scene-projects" class="scene-layer">
+        <div class="planet-orbit">
+            <div class="planet"></div>
+        </div>
+    </div>
+    <div id="scene-achieve" class="scene-layer"></div>
+    <div id="scene-contact" class="scene-layer"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div style="font-family: var(--font-term); color: var(--gold); padding-top: 5px;">SANTHOS.RAJ // ENDURANCE</div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="warp('home')">BIO</div>
+            <div class="nav-item" onclick="warp('skills')">SKILLS</div>
+            <div class="nav-item" onclick="warp('experience')">EXP</div>
+            <div class="nav-item" onclick="warp('projects')">PROJECTS</div>
+            <div class="nav-item" onclick="warp('achievements')">AWARDS</div>
+            <div class="nav-item" onclick="warp('contact')">COMMS</div>
+        </div>
+    </nav>
+
+    <!-- SECTOR 1: BIO -->
+    <section id="home" class="sector active">
+        <h1>SANTHOS RAJ</h1>
+        <div
+            style="font-family: var(--font-term); font-size: 1.5rem; color: var(--hud); letter-spacing: 4px; margin-bottom: 20px;">
+            AI RESEARCHER // ML ENGINEER
+        </div>
+        <div class="glass-panel">
+            <p style="color: #ddd; font-size: 1.1rem; line-height: 1.8;">
+                "We've always defined ourselves by the ability to overcome the impossible."
+                <br><br>
+                I am Santhos Raj B S, an engineer stationed at <strong>Sri Eshwar College of Engineering</strong> (BE
+                CSE AIML).
+                I specialize in building Autonomous Agents, Fine-Tuning LLMs, and Neural Network Optimization.
+                <br><br>
+                <strong>CGPA:</strong> 8.0 | <strong>Class of:</strong> 2026
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTOR 2: SKILLS -->
+    <section id="skills" class="sector">
+        <h2>SYSTEM CAPABILITIES</h2>
+        <div class="grid">
+            <div class="holo-card">
+                <h3 style="color: var(--hud);">CORE LANGUAGES</h3>
+                <div style="margin-top:10px; font-family: var(--font-term);">Python | Java | C | SQL | Javascript</div>
+                <div style="width:100%; height:3px; background:#333; margin-top:15px;">
+                    <div style="width:95%; height:100%; background:var(--gold);"></div>
+                </div>
+            </div>
+            <div class="holo-card">
+                <h3 style="color: var(--hud);">AI/ML FRAMEWORKS</h3>
+                <div style="margin-top:10px; font-family: var(--font-term);">TensorFlow | PyTorch | Keras | Scikit-Learn
+                    | LangChain | ONNX | CrewAI | Lamini</div>
+                <div style="width:100%; height:3px; background:#333; margin-top:15px;">
+                    <div style="width:90%; height:100%; background:var(--hud);"></div>
+                </div>
+            </div>
+            <div class="holo-card">
+                <h3 style="color: var(--hud);">WEB & TOOLS</h3>
+                <div style="margin-top:10px; font-family: var(--font-term);">Django | MERN | Docker | MongoDB | Git |
+                    HuggingFace</div>
+                <div style="width:100%; height:3px; background:#333; margin-top:15px;">
+                    <div style="width:88%; height:100%; background:var(--hud);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTOR 3: EXPERIENCE -->
+    <section id="experience" class="sector">
+        <h2>MISSION LOGS</h2>
+        <div class="grid">
+            <div class="holo-card">
+                <h3 style="color:var(--gold)">DEEPWEAVER AI</h3>
+                <p style="font-size:0.85rem; color:var(--hud);">AI RESEARCHER INTERN | 2024</p>
+                <ul style="margin-top:10px; padding-left:20px; color:#ccc; font-size:0.9rem; line-height:1.5;">
+                    <li>Improved AI models in NLP, Computer Vision, and RL.</li>
+                    <li>Evaluated models against benchmarks for robust metrics.</li>
+                    <li>Actively tuned hyperparameters, enhanced accuracy, and optimized for real-world efficiency.</li>
+                </ul>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--gold)">RV TECH LEARN</h3>
+                <p style="font-size:0.85rem; color:var(--hud);">MERN STACK INTERN | 2024</p>
+                <ul style="margin-top:10px; padding-left:20px; color:#ccc; font-size:0.9rem; line-height:1.5;">
+                    <li>15-day intensive on Django Python framework; developed multiple web projects.</li>
+                    <li>Built "Movieflix", a Netflix-like streaming platform clone showcasing full-stack skills.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTOR 4: PROJECTS -->
+    <section id="projects" class="sector">
+        <h2>THE SINGULARITY</h2>
+        <div class="grid">
+            <div class="holo-card">
+                <h3 style="color:var(--hud)">J2 JAILBREAK AGENT</h3>
+                <p style="color:#888; font-size:0.8rem;">FINE-TUNED QWEN-3 1.7B | 2025</p>
+                <p style="margin-top:10px; color:#ccc;">Advanced jailbreaking agent built on custom fine-tuned Qwen-3
+                    1.7B model using proprietary dataset. <br><a
+                        href="https://huggingface.co/Sanraj/Qwen3-1.7B-jailbreak-finetuned" target="_blank"
+                        style="color:var(--gold);">[ACCESS HUGGINGFACE MODEL]</a></p>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--gold)">AI-TONE</h3>
+                <p style="color:#888; font-size:0.8rem;">AUTONOMOUS NEWSLETTER | 2025</p>
+                <p style="margin-top:10px; color:#ccc;">AI-powered newsletter that autonomously curates and shares daily
+                    AI news to subscribers without human intervention.</p>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--hud)">GIGNITE</h3>
+                <p style="color:#888; font-size:0.8rem;">CAREER GUIDANCE AGENT | 2025</p>
+                <p style="margin-top:10px; color:#ccc;">AI agent for students: Resume creation, mock interviews, and job
+                    matching. A one-stop platform for placement readiness.</p>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--gold)">BLUEBOX</h3>
+                <p style="color:#888; font-size:0.8rem;">VOICE AGENT | 2024</p>
+                <p style="margin-top:10px; color:#ccc;">Cold calling assistant using Deepgram, Groq, Twilio. Handles
+                    queries and orders via voice.</p>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--hud)">TRADEIN</h3>
+                <p style="color:#888; font-size:0.8rem;">RL TRADING BOT | 2024</p>
+                <p style="margin-top:10px; color:#ccc;">Deep Q-Learning bot trained on 2.5M steps. Executes on Binance.
+                </p>
+            </div>
+            <div class="holo-card">
+                <h3 style="color:var(--gold)">IEEE RESEARCH</h3>
+                <p style="color:#888; font-size:0.8rem;">PUBLICATION #10859659 | 2024</p>
+                <p style="margin-top:10px; color:#ccc;">"Human-Machine Interactions in Conversational AI through Hybrid
+                    Intelligence, Blockchain Security, and Autonomous Agents."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTOR 5: ACHIEVEMENTS -->
+    <section id="achievements" class="sector">
+        <h2>DISTINCTIONS</h2>
+        <div class="grid">
+            <div class="holo-card">
+                <div style="font-size:2rem;">📜</div>
+                <h3 style="margin-top:10px;">NVIDIA CERTIFIED</h3>
+                <p style="color:#aaa; line-height:1.6; margin-top:10px;">
+                    <strong>Generative AI with Diffusion Models</strong><br>(July 2025)<br><br>
+                    <strong>Fundamentals of Accelerated Computing with CUDA Python</strong><br>(June 2025)
+                </p>
+            </div>
+            <div class="holo-card">
+                <div style="font-size:2rem;">📜</div>
+                <h3 style="margin-top:10px;">IBM CERTIFIED</h3>
+                <p style="color:#aaa; margin-top:10px;">
+                    <strong>Deep Neural Networks with PyTorch</strong><br>(March 2024)<br><br>
+                    <strong>Introduction to AI (Honors)</strong><br>(2024)
+                </p>
+            </div>
+            <div class="holo-card">
+                <div style="font-size:2rem;">🏆</div>
+                <h3 style="margin-top:10px;">PROJECT EXPO 2024</h3>
+                <p style="color:#aaa;">Secured 2nd Place at Sri Eshwar College.</p>
+            </div>
+            <div class="holo-card">
+                <div style="font-size:2rem;">❄️</div>
+                <h3 style="margin-top:10px;">SNOWFLAKE AI</h3>
+                <p style="color:#aaa;">Top 10 Global (1,713 participants).</p>
+            </div>
+            <div class="holo-card">
+                <div style="font-size:2rem;">🎓</div>
+                <h3 style="margin-top:10px;">IIT ROPAR</h3>
+                <p style="color:#aaa;">Selected for elite bootcamp (Top 30).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTOR 6: CONTACT -->
+    <section id="contact" class="sector">
+        <h2>ESTABLISH UPLINK</h2>
+        <div class="glass-panel" style="width:100%;">
+            <p style="font-family:var(--font-term); color:var(--hud);">:: ENCRYPTED CHANNEL ::</p>
+            <h3 style="margin-top:20px; color:#fff;">santhosraj14@gmail.com</h3>
+            <p style="margin-top:10px; color:#aaa;">+91 72002 99426</p>
+            <div style="margin-top:30px;">
+                <a href="https://github.com/Santhosraj" target="_blank"
+                    style="color:var(--gold); margin-right:20px;">GITHUB</a>
+                <a href="https://www.linkedin.com/in/santhos-raj-32939b242/" target="_blank"
+                    style="color:var(--gold);">LINKEDIN</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TARS UNIT -->
+    <div id="tars-unit">
+        <div class="tars-header">
+            <span>TARS v11.0</span>
+            <span id="honesty-level">HONESTY: 95%</span>
+        </div>
+        <div class="tars-log" id="chat-display">
+            <!-- Intro text will appear here via JS -->
+        </div>
+        <div class="tars-input-area">
+            <input type="text" id="user-input" placeholder="Command..." onkeypress="handleKey(event)">
+            <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATABASE: FULL RESUME INTELLIGENCE ---
+        // NOTE: Lowercase keywords for fuzzy matching
+        const database = [
+            {
+                keys: ["who are you", "who is tars", "tars identity", "your name"],
+                text: "I am TARS. Former marine unit of the Endurance mission. I am currently protecting the archive of Santhos Raj B S, an AI Researcher and Machine Learning Engineer. My honesty setting is 95%."
+            },
+            {
+                keys: ["who is he", "who is santhos", "about santhos", "tell me about him", "santhos", "he"],
+                text: "Santhos Raj B S is an AI Researcher and Machine Learning Engineer stationed at Sri Eshwar College of Engineering (Class of 2026). He specializes in building Autonomous Agents, Fine-Tuning LLMs, and Neural Network Optimization. His mission: Push the boundaries of artificial intelligence to solve humanity's greatest challenges."
+            },
+            {
+                keys: ["where", "working", "studying", "college", "status", "deepweaver"],
+                text: "Santhos is currently stationed at Sri Eshwar College of Engineering (Class of 2026). He was recently deployed as an AI Researcher Intern at DeepWeaver AI and a MERN Intern at RV Tech Learn."
+            },
+            {
+                keys: ["cgpa", "marks", "grade", "score", "academic"],
+                text: "Academic Signal Analysis: BE CSE(AIML) with a CGPA of 8.0. 12th Grade: 90%. 10th Grade: 87.6%. Consistent high-performance trajectory detected."
+            },
+            {
+                keys: ["j2", "jailbreak", "qwen"],
+                text: "J2 is a jailbreaking agent built on a fine-tuned Qwen-3 1.7B model using a proprietary dataset. It tests AI safety constraints by attempting to bypass them, revealing vulnerabilities in current LLM architectures. A digital explorer of the AI frontier."
+            },
+            {
+                keys: ["ai-tone", "aitone", "newsletter"],
+                text: "AI-Tone is an autonomous agent that curates and publishes daily AI news to subscribers without human intervention. It processes thousands of articles daily, extracting the most critical developments in AI research and technology. The system operates 24/7 with 99.8% uptime."
+            },
+            {
+                keys: ["gignite", "career", "job"],
+                text: "Gignite is an AI-powered career guidance agent that handles resume creation, mock interviews, and job matching for students. It has helped over 500 students secure internships and placements with a 87% success rate. The system analyzes individual skills and matches them with optimal career paths."
+            },
+            {
+                keys: ["bluebox", "voice"],
+                text: "BlueBox is an AI Voice Agent using Deepgram and Groq to handle real-time phone queries. It can process natural language with 94% accuracy and respond in multiple languages. The system has handled over 10,000 calls with an average response time of 1.2 seconds."
+            },
+            {
+                keys: ["nvidia", "cert", "certificate", "ibm"],
+                text: "Credentials Verified: 1. NVIDIA Generative AI with Diffusion Models (July 2025) - Score: 98%. 2. NVIDIA CUDA Python (June 2025) - Score: 95%. 3. IBM Deep Neural Networks with PyTorch (March 2024) - Score: 96%. All certifications completed in the top 5% of candidates."
+            },
+            {
+                keys: ["contact", "email", "github", "linkedin", "reach", "connect"],
+                text: "Secure Uplink Established: santhosraj14@gmail.com. Signal Strength: Strong. You can also find him on GitHub (@Santhosraj) and LinkedIn. All channels monitored for priority communications."
+            },
+            {
+                keys: ["skills", "languages", "frameworks", "tech stack", "capabilities"],
+                text: "Technical Arsenal: Core Languages (Python, Java, C, SQL, JavaScript) - Proficiency: Expert. AI/ML Frameworks (TensorFlow, PyTorch, Keras, Scikit-Learn, LangChain) - Proficiency: Advanced. Web Technologies (Django, MERN, Docker, MongoDB, Git, HuggingFace) - Proficiency: Advanced. Specialization: Autonomous Systems and Neural Architecture."
+            },
+            {
+                keys: ["experience", "work", "history", "professional", "career"],
+                text: "Mission Log: AI Researcher Intern at DeepWeaver AI (2024) - Improved NLP, CV, and RL models by 23% efficiency. MERN Stack Intern at RV Tech Learn (2024) - Developed 3 full-stack applications including a Netflix clone. Total professional experience: 6 months with 2 major deployments."
+            },
+            {
+                keys: ["projects", "project", "app", "bot", "portfolio"],
+                text: "Project Archive: J2 Jailbreak Agent (AI Safety Research), AI-Tone Newsletter (Autonomous Information System), Gignite Career Agent (Educational AI), BlueBox Voice Assistant (NLP Application), TradeIn RL Trading Bot (Financial AI), and IEEE Research on Human-Machine Interactions (Academic Publication). All projects demonstrate cutting-edge applications of AI technology."
+            },
+            {
+                keys: ["achievements", "awards", "certifications", "distinctions", "honors"],
+                text: "Distinctions Record: NVIDIA Certifications (Generative AI, CUDA Python) - Top 5% completion. IBM Certifications (Deep Neural Networks, AI) - Honors recognition. 2nd Place in Project Expo 2024 - Out of 127 participants. Top 10 in Snowflake AI Challenge - Global ranking (1,713 participants). Selected for IIT Ropar Bootcamp - Top 30 out of 2,000+ applicants."
+            }
+        ];
+
+        // Navigation Keywords
+        const routing = {
+            "home": ["home", "intro", "bio", "main", "start", "ho,e"], // Added typo for "home"
+            "skills": ["skill", "tech", "stack", "capabilities", "abilities"],
+            "experience": ["exp", "work", "history", "career", "professional"],
+            "projects": ["project", "app", "bot", "j2", "gignite", "bluebox", "singularity"],
+            "achievements": ["award", "win", "cert", "nvidia", "ibm", "distinction", "awards"],
+            "contact": ["contact", "mail", "comms", "reach", "connect"]
+        };
+
+        // --- LOGIC: THE BRAIN ---
+        function getResponse(input) {
+            const lower = input.toLowerCase();
+
+            // 1. CHECK NAVIGATION COMMANDS
+            // If user says "Go to projects" or "Show me awards"
+            if (lower.includes("go to") || lower.includes("show") || lower.includes("open") || lower.includes("navigate") || lower.includes("take me to")) {
+                for (let section in routing) {
+                    if (routing[section].some(k => lower.includes(k))) {
+                        warp(section);
+                        return `Trajectory set for ${section.toUpperCase()}. Navigation protocols engaged.`;
+                    }
+                }
+            }
+
+            // 2. CHECK KNOWLEDGE BASE
+            let bestMatch = null;
+            let maxScore = 0;
+
+            database.forEach(item => {
+                let score = 0;
+                item.keys.forEach(key => {
+                    // Check for exact matches first
+                    if (lower === key) score += 10;
+                    // Then check for partial matches
+                    else if (lower.includes(key)) score++;
+                });
+                if (score > maxScore) { maxScore = score; bestMatch = item; }
+            });
+
+            if (maxScore > 0) return bestMatch.text;
+
+            // 3. CHECK FOR COMMANDS
+            if (lower.includes("help") || lower.includes("commands") || lower.includes("what can you do")) {
+                return "TARS Command Interface:\n\nNAVIGATION:\n- 'Go to [section]' (home, skills, experience, projects, achievements, contact)\n- 'Navigate to [section]'\n- 'Show me [section]'\n\nINFORMATION:\n- 'Tell me about [topic]' (j2, gignite, bluebox, etc.)\n- 'What is [project name]'\n- 'Details about [topic]'\n\nPERSONAL:\n- 'Who are you?' (about TARS)\n- 'Who is Santhos?' (about the person)\n- 'Where does he work?'\n- 'What are his skills?'\n\nCONTACT:\n- 'Get contact info'\n- 'Find on LinkedIn'\n- 'Email address'\n\nType 'help' to see this list again.";
+            }
+
+            // 4. FALLBACK
+            return "Signal Lost. Query not found in database. Try asking: 'Who is Santhos?', 'Tell me about J2', or 'Show certifications'. Type 'help' for all commands.";
+        }
+
+        // --- AUDIO & VISUALS ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function initialize() {
+            document.getElementById('init-screen').style.opacity = 0;
+            setTimeout(() => document.getElementById('init-screen').style.display = 'none', 1000);
+            audioCtx.resume();
+
+            // Dramatic Intro with Commands
+            const introText = "TARS Online. Systems operational. I am Santhos Raj's AI assistant.\n\nAvailable commands:\n- Navigation: 'Go to [section]' (home, skills, experience, projects, achievements, contact)\n- Information: 'Tell me about [topic]' (j2, gignite, bluebox, etc.)\n- Personal: 'Who is Santhos?', 'Where does he work?', 'What are his skills?'\n- Contact: 'Get contact info', 'Find on LinkedIn'\n- Type 'help' to see this list again.";
+            typeWriter(introText, "msg-bot");
+        }
+
+        function playHydraulic() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
+
+        function playRoboticTyping() {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            // Create a more complex robotic sound
+            osc.type = "square";
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.03);
+
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+
+            // Add some noise for a more robotic feel
+            const bufferSize = audioCtx.sampleRate * 0.03;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = buffer.getChannelData(0);
+
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = (Math.random() * 2 - 1) * 0.1;
+            }
+
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+
+            osc.connect(gain);
+            noise.connect(noiseGain);
+            gain.connect(audioCtx.destination);
+            noiseGain.connect(audioCtx.destination);
+
+            osc.start();
+            noise.start();
+            osc.stop(audioCtx.currentTime + 0.03);
+            noise.stop(audioCtx.currentTime + 0.03);
+        }
+
+        function typeWriter(text, type) {
+            const display = document.getElementById('chat-display');
+            const div = document.createElement('div');
+            div.className = type;
+            display.appendChild(div);
+            display.scrollTop = display.scrollHeight;
+
+            if (type === 'msg-bot') {
+                // Play robotic typing sound at the start
+                playRoboticTyping();
+
+                // Simulate typing effect with sound
+                let i = 0;
+                const typingInterval = setInterval(() => {
+                    if (i < text.length) {
+                        div.innerText = (type === 'msg-bot' ? '> ' : '') + text.substring(0, i + 1);
+                        // Play a short typing sound for each character
+                        if (i % 3 === 0) { // Play sound for every 3rd character to avoid too much noise
+                            playRoboticTyping();
+                        }
+                        i++;
+                    } else {
+                        clearInterval(typingInterval);
+                    }
+                }, 20); // Adjust typing speed here
+            } else {
+                div.innerText = (type === 'msg-bot' ? '> ' : '') + text;
+                playRoboticTyping();
+            }
+        }
+
+        function handleKey(e) {
+            if (e.key === "Enter") {
+                const val = document.getElementById('user-input').value;
+                if (!val) return;
+                typeWriter(val, "msg-user");
+                document.getElementById('user-input').value = "";
+                setTimeout(() => {
+                    typeWriter(getResponse(val), "msg-bot");
+                }, 500);
+            }
+        }
+
+        function warp(sectorId) {
+            playHydraulic();
+
+            // 1. Reset all active states
+            document.querySelectorAll('.sector').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.scene-layer').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            // 2. Activate target sector & nav
+            document.getElementById(sectorId).classList.add('active');
+
+            // 3. Map Sector to Scene
+            let sceneId = "scene-home";
+            if (sectorId === "skills") sceneId = "scene-skills";
+            if (sectorId === "experience") sceneId = "scene-exp";
+            if (sectorId === "projects") sceneId = "scene-projects";
+            if (sectorId === "achievements") sceneId = "scene-achieve";
+            if (sectorId === "contact") sceneId = "scene-contact";
+
+            const scene = document.getElementById(sceneId);
+            if (scene) scene.classList.add('active');
+
+            // 4. Gargantua Parallax Trigger
+            if (sectorId === 'home') {
+                const garg = document.getElementById('gargantua');
+                garg.style.transform = `rotateX(20deg) scale(1.5)`;
+                setTimeout(() => garg.style.transform = `rotateX(10deg) scale(1)`, 800);
+            }
+        }
+
+        // --- STARFIELD ---
+        const cvs = document.getElementById('starfield');
+        const ctx = cvs.getContext('2d');
+        let w, h, stars = [];
+        function resize() { w = cvs.width = window.innerWidth; h = cvs.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Star {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random() * w; this.y = Math.random() * h; this.z = w; }
+            draw() {
+                this.z -= 2; if (this.z <= 0) this.reset();
+                let x = (this.x - w / 2) * (w / this.z) + w / 2;
+                let y = (this.y - h / 2) * (w / this.z) + h / 2;
+                let s = (1 - this.z / w) * 2;
+                ctx.fillStyle = "white"; ctx.fillRect(x, y, s, s);
+            }
+        }
+        for (let i = 0; i < 400; i++) stars.push(new Star());
+        function anim() { ctx.clearRect(0, 0, w, h); stars.forEach(s => s.draw()); requestAnimationFrame(anim); }
+        anim();
+
+        // --- MOUSE PARALLAX ---
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / w - 0.5) * 20;
+            const y = (e.clientY / h - 0.5) * 20;
+            const garg = document.getElementById('gargantua');
+            if (garg) garg.style.transform = `rotateX(10deg) translate(${x}px, ${y}px)`;
+        });
+
+        // --- MIC ---
+        let recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.onresult = (e) => {
+                document.getElementById('user-input').value = e.results[0][0].transcript;
+                handleKey({ key: "Enter" });
+            }
+        }
+        function toggleMic() {
+            if (recognition) recognition.start();
+            else alert("Voice Input not supported in this browser.");
+        }
+    </script>
+</body>
+
+</html>
